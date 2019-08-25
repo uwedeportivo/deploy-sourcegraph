@@ -25,29 +25,22 @@ spec:
         group: backend
     spec:
       containers:
-      - env:
+      - env: null
         image: index.docker.io/sourcegraph/postgres-11.4:19-07-15_63c77a05@sha256:21881633991e9548319fcf5b9e2777ddba6404b7d551dedde9e39e5b9287a982
-        terminationMessagePolicy: FallbackToLogsOnError
-        readinessProbe:
-          exec:
-            command:
-              - /ready.sh
         livenessProbe:
-          initialDelaySeconds: 15
           exec:
             command:
-              - /liveness.sh
+            - /liveness.sh
+          initialDelaySeconds: 15
         name: pgsql
         ports:
         - containerPort: 5432
           name: pgsql
-        resources:
-          limits:
-            cpu: "4"
-            memory: 2Gi
-          requests:
-            cpu: "4"
-            memory: 2Gi
+        readinessProbe:
+          exec:
+            command:
+            - /ready.sh
+        terminationMessagePolicy: FallbackToLogsOnError
         volumeMounts:
         - mountPath: /data
           name: disk
@@ -55,15 +48,8 @@ spec:
         - name: DATA_SOURCE_NAME
           value: postgres://sg:@localhost:5432/?sslmode=disable
         image: wrouesnel/postgres_exporter:v0.5.0@sha256:63b99863928c2cd739f59e156a1994327987729af57b31c0f753c84db3e356ba
-        terminationMessagePolicy: FallbackToLogsOnError
         name: pgsql-exporter
-        resources:
-          limits:
-            cpu: 10m
-            memory: 50Mi
-          requests:
-            cpu: 10m
-            memory: 50Mi
+        terminationMessagePolicy: FallbackToLogsOnError
       securityContext:
         runAsUser: 0
       volumes:

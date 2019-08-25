@@ -25,21 +25,14 @@ spec:
         app: repo-updater
     spec:
       containers:
-      - image: index.docker.io/sourcegraph/repo-updater:3.6.0-rc.2@sha256:fd7c7d404e75dce02a0d0f7d9402bcb3c3884686807b157493e81fa843132f25
-        env:
-        terminationMessagePolicy: FallbackToLogsOnError
+      - env: null
+        image: index.docker.io/sourcegraph/repo-updater:3.6.0-rc.2@sha256:fd7c7d404e75dce02a0d0f7d9402bcb3c3884686807b157493e81fa843132f25
         name: repo-updater
         ports:
         - containerPort: 3182
           name: http
         - containerPort: 6060
           name: debug
-        resources:
-          limits:
-            cpu: 100m
-            memory: 500Mi
-          requests:
-            cpu: 100m
-            memory: 500Mi
+        terminationMessagePolicy: FallbackToLogsOnError
       securityContext:
         runAsUser: 0

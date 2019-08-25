@@ -39,17 +39,13 @@ spec:
           value: sg
         - name: SRC_GIT_SERVERS
           value: gitserver-0.gitserver:3178
-        # POD_NAME is used by CACHE_DIR
         - name: POD_NAME
           valueFrom:
             fieldRef:
               fieldPath: metadata.name
-        # CACHE_DIR stores larger items we cache. Majority of it is zip
-        # archives of repositories at a commit.
         - name: CACHE_DIR
           value: /mnt/cache/$(POD_NAME)
         image: index.docker.io/sourcegraph/frontend:3.6.0-rc.2@sha256:2944c57f03b8851052fc62cf5c3aa0195fb8910f8fa8c66152c6a5d6da5f8119
-        terminationMessagePolicy: FallbackToLogsOnError
         livenessProbe:
           httpGet:
             path: /healthz
@@ -57,6 +53,12 @@ spec:
             scheme: HTTP
           initialDelaySeconds: 300
           timeoutSeconds: 5
+        name: frontend
+        ports:
+        - containerPort: 3080
+          name: http
+        - containerPort: 3090
+          name: http-internal
         readinessProbe:
           httpGet:
             path: /healthz
@@ -64,19 +66,7 @@ spec:
             scheme: HTTP
           periodSeconds: 5
           timeoutSeconds: 5
-        name: frontend
-        ports:
-        - containerPort: 3080
-          name: http
-        - containerPort: 3090
-          name: http-internal
-        resources:
-          limits:
-            cpu: "2"
-            memory: 4G
-          requests:
-            cpu: "2"
-            memory: 2G
+        terminationMessagePolicy: FallbackToLogsOnError
         volumeMounts:
         - mountPath: /mnt/cache
           name: cache-ssd

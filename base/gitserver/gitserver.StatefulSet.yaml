@@ -23,9 +23,8 @@ spec:
       containers:
       - args:
         - run
-        env:
+        env: null
         image: index.docker.io/sourcegraph/gitserver:3.6.0-rc.2@sha256:a4d64e250de975aa8fa63d2de63920b21ec9d324c9e8552e5c1d0ccca20baac9
-        terminationMessagePolicy: FallbackToLogsOnError
         livenessProbe:
           initialDelaySeconds: 5
           tcpSocket:
@@ -35,30 +34,14 @@ spec:
         ports:
         - containerPort: 3178
           name: rpc
-        resources:
-          limits:
-            cpu: "4"
-            memory: 8G
-          requests:
-            cpu: "4" 
-            memory: 8G
+        terminationMessagePolicy: FallbackToLogsOnError
         volumeMounts:
         - mountPath: /data/repos
           name: repos
-        # See the customization guide (../../../docs/configure.md) for information
-        # about configuring gitserver to use an SSH key
-        # - mountPath: /root/.ssh
-        #   name: ssh
       securityContext:
         runAsUser: 0
       volumes:
       - name: repos
-      # See the customization guide (../../../docs/configure.md) for information
-      # about configuring gitserver to use an SSH key
-      # - name: ssh
-      #   secret:
-      #     defaultMode: 384
-      #     secretName: gitserver-ssh
   updateStrategy:
     type: RollingUpdate
   volumeClaimTemplates:
@@ -69,7 +52,4 @@ spec:
       - ReadWriteOnce
       resources:
         requests:
-          # The size of disk used to mirror your git repositories.
-          # If you change this, also change indexed-search's disk size.
           storage: 200Gi
-      storageClassName: sourcegraph

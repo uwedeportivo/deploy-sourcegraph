@@ -24,52 +24,29 @@ spec:
         app: prometheus
     spec:
       containers:
-      - args:
-        - -alertmanager.url=http://alertmanager
-        - -config.file=/etc/prometheus/prometheus.yml
-        - -storage.local.path=/prometheus/data
-        - -web.console.libraries=/etc/prometheus/console_libraries
-        - -web.console.templates=/etc/prometheus/consoles
-        image: index.docker.io/sourcegraph/prometheus:v1.4.1@sha256:1a02878ac9a0f532a68673bda93d406b21786706446c42a40cb3ed3e867278c0
+      - image: sourcegraph/prometheus:dev-foo
+        command:
+          - "yes"
+        imagePullPolicy: Never
+        env:
+        - name: USE_KUBERNETES_DISCOVERY
+          value: "true"
         terminationMessagePolicy: FallbackToLogsOnError
         name: prometheus
         ports:
         - containerPort: 9090
           name: http
-        resources:
-          limits:
-            cpu: "4"
-            memory: 8Gi
-          requests:
-            cpu: 500m
-            memory: 2Gi
         volumeMounts:
-        - mountPath: /prometheus
-          name: data
-        - mountPath: /etc/prometheus
-          name: config
-      - args:
-        - --volume-dir=/etc/prometheus
-        - --webhook-url=http://localhost:9090/-/reload
-        image: index.docker.io/sourcegraph/configmap-reload:v0.1@sha256:dc40dccdaa22cd28a77fc2a53a765c59d315c6828b2bbe51a40416954b6d3705
-        name: configmap-reload
-        resources:
-          limits:
-            cpu: 10m
-            memory: 10Mi
-          requests:
-            cpu: 10m
-            memory: 10Mi
-        volumeMounts:
-        - mountPath: /etc/prometheus
-          name: config
-          readOnly: true
+        #- mountPath: /prometheus
+        #  name: data
+        #- mountPath: /prometheus/sg_config/add_ons
+        #  name: config
       serviceAccountName: prometheus
       volumes:
-      - name: data
-        persistentVolumeClaim:
-          claimName: prometheus
-      - configMap:
-          defaultMode: 464
-          name: prometheus
-        name: config
+      #- name: data
+      #  persistentVolumeClaim:
+      #    claimName: prometheus
+      #- configMap:
+      #    defaultMode: 464
+      #    name: prometheus
+      #  name: config

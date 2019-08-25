@@ -34,8 +34,6 @@ spec:
         - name: CACHE_DIR
           value: /mnt/cache/$(POD_NAME)
         image: index.docker.io/sourcegraph/symbols:3.6.0-rc.2@sha256:d9b8b6fa5c1d4b8d1bc1c8331f097b090965c6010d3ef661f80e9b7946e57209
-        terminationMessagePolicy: FallbackToLogsOnError
-        name: symbols
         livenessProbe:
           httpGet:
             path: /healthz
@@ -43,6 +41,12 @@ spec:
             scheme: HTTP
           initialDelaySeconds: 60
           timeoutSeconds: 5
+        name: symbols
+        ports:
+        - containerPort: 3184
+          name: http
+        - containerPort: 6060
+          name: debug
         readinessProbe:
           httpGet:
             path: /healthz
@@ -50,18 +54,7 @@ spec:
             scheme: HTTP
           periodSeconds: 5
           timeoutSeconds: 5
-        ports:
-        - containerPort: 3184
-          name: http
-        - containerPort: 6060
-          name: debug
-        resources:
-          limits:
-            cpu: "2"
-            memory: 2G
-          requests:
-            cpu: 500m
-            memory: 500M
+        terminationMessagePolicy: FallbackToLogsOnError
         volumeMounts:
         - mountPath: /mnt/cache
           name: cache-ssd

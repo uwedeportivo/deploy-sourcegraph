@@ -36,7 +36,6 @@ spec:
         - name: PGUSER
           value: sg
         image: index.docker.io/sourcegraph/management-console:3.6.0-rc.2@sha256:93cdc51fa0474f8ccff06863803c1dcad36dfa4a6e395ef0393c0bbd742ee03d
-        terminationMessagePolicy: FallbackToLogsOnError
         name: management-console
         ports:
         - containerPort: 2633
@@ -46,13 +45,7 @@ spec:
         readinessProbe:
           tcpSocket:
             port: 2633
-        resources:
-          limits:
-            cpu: "1"
-            memory: 512Mi
-          requests:
-            cpu: 100m
-            memory: 500Mi
+        terminationMessagePolicy: FallbackToLogsOnError
         volumeMounts:
         - mountPath: /etc/sourcegraph
           name: disk

@@ -24,9 +24,8 @@ spec:
         app: indexed-search
     spec:
       containers:
-      - env:
+      - env: null
         image: index.docker.io/sourcegraph/zoekt-webserver:19-07-16_51c44e6@sha256:4ee336b6a7141cd5e41f2233f2f71f172dfe6b5ea19b470aa5bd275b4bf4d061
-        terminationMessagePolicy: FallbackToLogsOnError
         name: zoekt-webserver
         ports:
         - containerPort: 6070
@@ -38,32 +37,17 @@ spec:
             port: http
             scheme: HTTP
           periodSeconds: 1
-        resources:
-          limits:
-            cpu: "2"
-            memory: 4G
-          requests:
-            cpu: 500m
-            memory: 2Gi
+        terminationMessagePolicy: FallbackToLogsOnError
         volumeMounts:
         - mountPath: /data
           name: disk
-      - env:
+      - env: null
         image: index.docker.io/sourcegraph/zoekt-indexserver:19-07-16_51c44e6@sha256:18d07ece697833e03c10c7820e8c35a41882abe5a066a34afa3582518bec5525
-        terminationMessagePolicy: FallbackToLogsOnError
         name: zoekt-indexserver
         ports:
         - containerPort: 6072
           name: index-http
-        resources:
-          # zoekt-indexserver is CPU bound. The more CPU you allocate to it, the
-          # lower lag between a new commit and it being indexed for search.
-          limits:
-            cpu: "4"
-            memory: 4G
-          requests:
-            cpu: 500m
-            memory: 2Gi
+        terminationMessagePolicy: FallbackToLogsOnError
         volumeMounts:
         - mountPath: /data
           name: disk

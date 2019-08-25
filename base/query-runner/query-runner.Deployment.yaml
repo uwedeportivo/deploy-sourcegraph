@@ -24,19 +24,12 @@ spec:
         app: query-runner
     spec:
       containers:
-      - env:
+      - env: null
         image: index.docker.io/sourcegraph/query-runner:3.6.0-rc.2@sha256:cbedaef6bf50c2e3187793b3e1b87da435de08ee05744d6d3f19b019325e164d
-        terminationMessagePolicy: FallbackToLogsOnError
         name: query-runner
         ports:
         - containerPort: 3183
           name: http
-        resources:
-          limits:
-            cpu: "1"
-            memory: 1G
-          requests:
-            cpu: 500m
-            memory: 1G
+        terminationMessagePolicy: FallbackToLogsOnError
       securityContext:
         runAsUser: 0

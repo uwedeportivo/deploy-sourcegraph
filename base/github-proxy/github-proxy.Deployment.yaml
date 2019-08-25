@@ -24,19 +24,12 @@ spec:
         app: github-proxy
     spec:
       containers:
-      - env:
+      - env: null
         image: index.docker.io/sourcegraph/github-proxy:3.6.0-rc.2@sha256:0458eaea3fe6254de094a365d47ac7f883f74b627a198ee7ebb2d2d225baf131
-        terminationMessagePolicy: FallbackToLogsOnError
         name: github-proxy
         ports:
         - containerPort: 3180
           name: http
-        resources:
-          limits:
-            cpu: "1"
-            memory: 1G
-          requests:
-            cpu: 100m
-            memory: 250M
+        terminationMessagePolicy: FallbackToLogsOnError
       securityContext:
         runAsUser: 0
